@@ -5,27 +5,26 @@ trigger: none
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- group: azure-credentials
+
 parameters:
   - name: subscriptionId
     displayName: Subscription ID
     type: string
-    default: "<subscriptionId>"
+    default: "$(AzureSubscriptionId)"
   - name: serviceConnection
     displayName: Service connection
     type: string
-    default: "<serviceConnection>"
+    default: "$(AzureServiceConnection)"
   - name: resourceGroupName
     displayName: Resource group name
     type: string
-    default: "rg-apai"
-  - name: resourceGroupNameVMSS
-    displayName: Resource group name for VMSS
-    type: string
-    default: "rg-vmss"
+    default: "$(ResourceGroupName)"
   - name: location
     displayName: Location
     type: string
-    default: "australiaeast"
+    default: "$(Location)"
   - name: imageType
     displayName: Image type
     type: string
@@ -38,13 +37,6 @@ parameters:
       - Windows2022
   - name: generateImage
     displayName: Generate Image
-    type: boolean
-    default: false
-    values:
-      - true
-      - false
-  - name: createVMSS
-    displayName: Create VMSS
     type: boolean
     default: false
     values:
@@ -101,22 +93,6 @@ stages:
                   -imageType ${{ parameters.imageType }} `
                   -location ${{ parameters.location }} `
                   -debugPacker ${{ parameters.debugPacker }}
-
-          - task: AzureCLI@2
-            displayName: Create VMSS in ${{ parameters.resourceGroupNameVMSS }}
-            enabled: ${{ parameters.createVMSS }}
-            inputs:
-              azureSubscription: ${{ parameters.serviceConnection }}
-              scriptType: pscore
-              scriptLocation: inlineScript
-              inlineScript: |
-                . $(Build.SourcesDirectory)/.scripts/Functions.ps1
-
-                Add-VMSS `
-                  -resourceGroupName ${{ parameters.resourceGroupNameVMSS }} `
-                  -resourceGroupNameImage ${{ parameters.resourceGroupName }} `
-                  -imageType ${{ parameters.imageType }} `
-                  -location ${{ parameters.location }}
 
           - task: AzureCLI@2
             displayName: Update VMSS in ${{ parameters.resourceGroupNameVMSS }}
