@@ -53,7 +53,7 @@ stages:
             displayName: Clone Repository
             enabled: ${{ parameters.generateImage }}
             inputs:
-              azureSubscription: ${env:AzureServiceConnection}
+              azureSubscription: AzRGConn
               scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
@@ -64,7 +64,7 @@ stages:
             displayName: Generate ${{ parameters.imageType }}
             enabled: ${{ parameters.generateImage }}
             inputs:
-              azureSubscription: ${env:AzureServiceConnection}
+              azureSubscription: AzRGConn
               scriptType: pscore
               scriptLocation: inlineScript
               addSpnToEnvironment: true
