@@ -39,6 +39,7 @@ function Add-Image {
         -AzureTenantId $tenantId `
         -AzureClientId $servicePrincipalId `
         -AzureClientSecret $servicePrincipalKey `
+        -ReuseResourceGroup
 }
 
 # Function to update a VMSS with a new image
