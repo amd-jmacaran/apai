@@ -53,7 +53,7 @@ stages:
             displayName: Clone Repository
             enabled: ${{ parameters.generateImage }}
             inputs:
-              azureSubscription: $(AzureServiceConnection)
+              azureSubscription: ${env:AzureServiceConnection}
               scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
@@ -64,7 +64,7 @@ stages:
             displayName: Generate ${{ parameters.imageType }}
             enabled: ${{ parameters.generateImage }}
             inputs:
-              azureSubscription: $(AzureServiceConnection)
+              azureSubscription: ${env:AzureServiceConnection}
               scriptType: pscore
               scriptLocation: inlineScript
               addSpnToEnvironment: true
@@ -72,8 +72,8 @@ stages:
                 . $(Build.SourcesDirectory)/.scripts/Functions.ps1
                 Add-Image `
                   -workingDirectory $(Build.SourcesDirectory) `
-                  -subscriptionId $(AzureSubscriptionId) `
-                  -resourceGroupName $(ResourceGroupName) `
+                  -subscriptionId ${env:AzureSubscriptionId} `
+                  -resourceGroupName ${env:ResourceGroupName} `
                   -imageType ${{ parameters.imageType }} `
-                  -location $(Location) `
+                  -location ${env:Location} `
                   -debugPacker ${{ parameters.debugPacker }}
