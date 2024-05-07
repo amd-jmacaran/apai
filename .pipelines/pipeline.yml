@@ -72,8 +72,8 @@ stages:
                 . $(Build.SourcesDirectory)/.scripts/Functions.ps1
                 Add-Image `
                   -workingDirectory $(Build.SourcesDirectory) `
-                  -subscriptionId ${env:AzureSubscriptionId} `
-                  -resourceGroupName ${env:ResourceGroupName} `
+                  -subscriptionId $(AzureSubscriptionId) `
+                  -resourceGroupName $(ResourceGroupName) `
                   -imageType ${{ parameters.imageType }} `
-                  -location ${env:Location} `
+                  -location $(Location) `
                   -debugPacker ${{ parameters.debugPacker }}
