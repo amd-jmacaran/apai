@@ -9,22 +9,6 @@ variables:
 - group: azure-credentials
 
 parameters:
-  - name: subscriptionId
-    displayName: Subscription ID
-    type: string
-    default: "$(AzureSubscriptionId)"
-  - name: serviceConnection
-    displayName: Service connection
-    type: string
-    default: "$(AzureServiceConnection)"
-  - name: resourceGroupName
-    displayName: Resource group name
-    type: string
-    default: "$(ResourceGroupName)"
-  - name: location
-    displayName: Location
-    type: string
-    default: "$(Location)"
   - name: imageType
     displayName: Image type
     type: string
@@ -69,7 +53,7 @@ stages:
             displayName: Clone Repository
             enabled: ${{ parameters.generateImage }}
             inputs:
-              azureSubscription: ${{ parameters.serviceConnection }}
+              azureSubscription: $(AzureServiceConnection)
               scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
@@ -80,7 +64,7 @@ stages:
             displayName: Generate ${{ parameters.imageType }}
             enabled: ${{ parameters.generateImage }}
             inputs:
-              azureSubscription: ${{ parameters.serviceConnection }}
+              azureSubscription: $(AzureServiceConnection)
               scriptType: pscore
               scriptLocation: inlineScript
               addSpnToEnvironment: true
@@ -88,8 +72,8 @@ stages:
                 . $(Build.SourcesDirectory)/.scripts/Functions.ps1
                 Add-Image `
                   -workingDirectory $(Build.SourcesDirectory) `
-                  -subscriptionId ${{ parameters.subscriptionId }} `
-                  -resourceGroupName ${{ parameters.resourceGroupName }} `
+                  -subscriptionId $(AzureSubscriptionId) `
+                  -resourceGroupName $(ResourceGroupName) `
                   -imageType ${{ parameters.imageType }} `
-                  -location ${{ parameters.location }} `
+                  -location $(Location) `
                   -debugPacker ${{ parameters.debugPacker }}
